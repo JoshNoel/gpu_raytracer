@@ -47,8 +47,12 @@ namespace cray
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		printf("\rFPS: %f", 1.0 / std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - m_last_frame_time).count());
-		m_last_frame_time = std::chrono::high_resolution_clock::now();
+		m_frame_counter++;
+		if (m_frame_counter % 100 == 0) {
+			m_frame_counter = 0;
+			printf("\rFPS: %f", 100.0 / std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - m_last_fps_frame_time).count());
+			m_last_fps_frame_time = std::chrono::high_resolution_clock::now();
+		}
 	}
 
 

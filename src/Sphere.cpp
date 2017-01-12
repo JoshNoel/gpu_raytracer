@@ -60,6 +60,10 @@ namespace cray
 			t2 = t;
 		}
 
+		if(t1 < 0 && t2 < 0) {
+			return false;
+		}
+
 		if (ray.m_thit0 > t1) {
 			ray.m_thit0 = t1;
 			ray.m_thit1 = t2;

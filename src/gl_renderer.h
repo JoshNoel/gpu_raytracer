@@ -31,7 +31,8 @@ namespace cray
 
 
 		//timing
-		std::chrono::high_resolution_clock::time_point m_last_frame_time;
+		unsigned int m_frame_counter = 0;
+		std::chrono::high_resolution_clock::time_point m_last_fps_frame_time;
 	};
 }
 #endif

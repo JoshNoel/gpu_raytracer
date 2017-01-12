@@ -15,7 +15,7 @@ namespace cray
 	class Tracer
 	{
 	public:
-		Tracer(const Camera& p_camera);
+		Tracer(Camera& p_camera, const float4& p_clear_color);
 		~Tracer();
 
 		void add_sphere(const Sphere& p_sphere);
@@ -25,9 +25,11 @@ namespace cray
 		void render();
 
 	private:
+		void copy_camera();
+
 		cudaGraphicsResource* m_image = nullptr;
 
-		Camera m_camera;
+		Camera& m_camera;
 		std::vector<Sphere> m_spheres;
 		std::vector<Light> m_lights;
 
@@ -37,6 +39,8 @@ namespace cray
 
 		//to ensure device pointers are initialized before rendering
 		bool m_device_pointers_initialized = false;
+
+		float4 m_clear_color;
 	};
 }
 #endif

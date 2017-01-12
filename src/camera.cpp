@@ -34,4 +34,10 @@ namespace cray
 		this->m_world_height = p_camera.m_world_height;
 		return *this;
 	}
+
+
+	const float Camera::MOVE_PARAMETERS::FORWARD_SPEED = 0.1f;
+	const float Camera::MOVE_PARAMETERS::SIDE_SPEED = 0.1f;
+	const float Camera::MOVE_PARAMETERS::BACK_SPEED = 0.1f;
+
 }
