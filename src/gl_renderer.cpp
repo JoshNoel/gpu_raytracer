@@ -38,7 +38,7 @@ namespace cray
 	gl_renderer::~gl_renderer() {
 	}
 
-	void gl_renderer::render() const{
+	void gl_renderer::render() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(m_program_id);
@@ -47,7 +47,8 @@ namespace cray
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-
+		printf("\rFPS: %f", 1.0 / std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - m_last_frame_time).count());
+		m_last_frame_time = std::chrono::high_resolution_clock::now();
 	}
 
 

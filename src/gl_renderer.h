@@ -3,6 +3,7 @@
 
 #include "GL/glew.h"
 #include <vector>
+#include <chrono>
 
 namespace cray
 {
@@ -12,7 +13,7 @@ namespace cray
 		gl_renderer(std::string p_vert_path, std::string p_frag_path, unsigned width, unsigned height);
 		~gl_renderer();
 
-		void render() const;
+		void render();
 
 		GLuint m_texture;
 
@@ -27,6 +28,10 @@ namespace cray
 		std::string m_frag_shader_path;
 
 		GLuint m_program_id;
+
+
+		//timing
+		std::chrono::high_resolution_clock::time_point m_last_frame_time;
 	};
 }
 #endif

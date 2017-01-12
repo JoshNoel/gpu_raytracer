@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "sphere.h"
 #include "tracer.h"
+#include "material.h"
 
 #include <iostream>
 
@@ -65,11 +66,16 @@ int main() {
 #endif
 
 	cray::gl_renderer renderer("./res/shaders/texture_display.vert", "./res/shaders/texture_display.frag", WIDTH, HEIGHT);
+	
+	cray::Material material(make_float3(1.0f, 0.0f, 0.0f));
+	cray::Sphere sphere(1.0f, make_float3(0.0f, 0.0f, -5.0f), material);
+	cray::Light point_light;
+	point_light = cray::Light::make_point_light(make_float3(0.5f, 1.0f, -1.0f), make_float3(1.0f, 1.0f, 1.0f), 1.0f);
 
-	cray::Sphere sphere(1.0f, make_float3(0.0f, 0.0f, -5.0f), make_float4(1.0f,0.0f,0.0f, 1.0f));
 	cray::Camera camera = cray::Camera::make_camera(make_float3(0.0f, 0.0f, 0.0f), make_float3(0.0f, 0.0f, -1.0f), make_float3(0.0f, 1.0f, 0.0f), WIDTH, HEIGHT);
 	cray::Tracer tracer(camera);
 	tracer.add_sphere(sphere);
+	tracer.add_light(point_light);
 	tracer.create_cuda_objects();
 	tracer.register_texture(renderer.m_texture);
 

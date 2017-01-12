@@ -3,8 +3,11 @@
 
 #include "GL/glew.h"
 #include "cuda_gl_interop.h"
+
 #include "camera.h"
 #include "sphere.h"
+#include "Light.h"
+
 #include <vector>
 
 namespace cray
@@ -16,17 +19,24 @@ namespace cray
 		~Tracer();
 
 		void add_sphere(const Sphere& p_sphere);
-		void register_texture(GLuint texture);
+		void add_light(const Light& p_light);
+		void register_texture(GLuint p_texture);
 		void create_cuda_objects();
 		void render();
 
 	private:
-		cudaGraphicsResource* m_image;
+		cudaGraphicsResource* m_image = nullptr;
 
 		Camera m_camera;
 		std::vector<Sphere> m_spheres;
+		std::vector<Light> m_lights;
 
-		Sphere* m_d_spheres;
+
+		Sphere* m_d_spheres = nullptr;
+		Light* m_d_lights = nullptr;
+
+		//to ensure device pointers are initialized before rendering
+		bool m_device_pointers_initialized = false;
 	};
 }
 #endif
