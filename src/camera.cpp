@@ -15,7 +15,7 @@ namespace cray
 		cam.m_fov = p_fov;
 		cam.m_focal_length = p_focal_length;
 		cam.m_ar = float(p_width) / float(p_height);
-		cam.m_world_width = (2.0f * tanf(p_fov) * p_focal_length);
+		cam.m_world_width = 2.0f * tanf(p_fov / 2.0f) * p_focal_length;
 		cam.m_world_height = cam.m_world_width / cam.m_ar;
 		return cam;
 	}
@@ -34,4 +34,10 @@ namespace cray
 		this->m_world_height = p_camera.m_world_height;
 		return *this;
 	}
+
+
+	const float Camera::MOVE_PARAMETERS::FORWARD_SPEED = 0.1f;
+	const float Camera::MOVE_PARAMETERS::SIDE_SPEED = 0.1f;
+	const float Camera::MOVE_PARAMETERS::BACK_SPEED = 0.1f;
+
 }

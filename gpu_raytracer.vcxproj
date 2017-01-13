@@ -155,6 +155,7 @@
     <CudaCompile Include="src\math_helper.h" />
     <CudaCompile Include="src\Sphere.h" />
     <CudaCompile Include="src\ray.h" />
+    <CudaCompile Include="src\plane.h" />
     <ClInclude Include="src\material.h" />
     <ClInclude Include="src\light.h" />
     <ClInclude Include="src\gl_helper.h" />
@@ -169,6 +170,7 @@
     <CudaCompile Include="src\math_helper.cpp" />
     <CudaCompile Include="src\Sphere.cpp" />
     <CudaCompile Include="src\ray.cpp" />
+    <CudaCompile Include="src\plane.cpp" />
     <ClCompile Include="src\material.cpp" />
     <ClCompile Include="src\light.cpp" />
     <ClCompile Include="src\gl_helper.cpp" />

@@ -4,6 +4,7 @@
 
 namespace cray
 {
+	Camera* cray_key_camera;
 	void CALLBACK opengl_error_callback(GLenum source​, GLenum type, GLuint id​, GLenum severity, GLsizei length​, const GLchar * p_message, const void * userParam​)
 	{
 		std::cout << "------------------------OPENGL ERROR--------------------------" << std::endl;
@@ -59,4 +60,35 @@ namespace cray
 		std::cout << "--------------------------------------------------------------" << std::endl << std::endl;
 
 	}
+	
+	void key_handler(GLFWwindow* p_window) {
+		int action = glfwGetKey(p_window, GLFW_KEY_W);
+		if(action == GLFW_PRESS || action == GLFW_REPEAT)
+		{
+			cray_key_camera->m_position = cray_key_camera->m_position + cray_key_camera->m_dir * Camera::MOVE_PARAMETERS::FORWARD_SPEED;
+			cray_key_camera->m_needs_update = true;
+		}
+
+		action = glfwGetKey(p_window, GLFW_KEY_S);
+		if (action == GLFW_PRESS || action == GLFW_REPEAT)
+		{
+			cray_key_camera->m_position = cray_key_camera->m_position - cray_key_camera->m_dir * Camera::MOVE_PARAMETERS::BACK_SPEED;
+			cray_key_camera->m_needs_update = true;
+		}
+
+		action = glfwGetKey(p_window, GLFW_KEY_D);
+		if (action == GLFW_PRESS || action == GLFW_REPEAT)
+		{
+			cray_key_camera->m_position = cray_key_camera->m_position + cray_key_camera->m_right * Camera::MOVE_PARAMETERS::SIDE_SPEED;
+			cray_key_camera->m_needs_update = true;
+		}
+
+		action = glfwGetKey(p_window, GLFW_KEY_A);
+		if (action == GLFW_PRESS || action == GLFW_REPEAT)
+		{
+			cray_key_camera->m_position = cray_key_camera->m_position - cray_key_camera->m_right * Camera::MOVE_PARAMETERS::SIDE_SPEED;
+			cray_key_camera->m_needs_update = true;
+		}
+	}
 }
+
