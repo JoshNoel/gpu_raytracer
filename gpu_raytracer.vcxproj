@@ -52,6 +52,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 8.0.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -68,20 +69,46 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(CudaToolkitIncludeDir);$(IncludePath)</IncludePath>
+    <ExecutablePath>$(CudaToolkitBinDir);$(ExecutablePath)</ExecutablePath>
+    <LibraryPath>$(CudaToolkitLibDir);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LibraryPath>$(CudaToolkitLibDir);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(CudaToolkitIncludeDir);$(IncludePath)</IncludePath>
+    <ExecutablePath>$(CudaToolkitBinDir);$(ExecutablePath)</ExecutablePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>F:\Projects\Libs\install\Windows\glew-2.0.0\include;F:\Projects\Libs\install\Windows\glfw\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BREAK_ON_CUDA_ERROR;BREAK_ON_GL_ERROR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;cudart.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\Projects\Libs\install\Windows\glfw\lib64\Debug;%(AdditionalLibraryDirectories);F:\Projects\Libs\install\Windows\glew-2.0.0\lib\Release\x64</AdditionalLibraryDirectories>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <CudaCompile>
+      <Include>%(Include)</Include>
+      <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+      <CodeGeneration>compute_50,sm_50</CodeGeneration>
+      <AdditionalOptions>-x cu %(AdditionalOptions)</AdditionalOptions>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -94,6 +121,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -103,15 +131,57 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>F:\Projects\Libs\install\Windows\glew-2.0.0\include;F:\Projects\Libs\install\Windows\glfw\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BREAK_ON_CUDA_ERROR;BREAK_ON_GL_ERROR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;cudart.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\Projects\Libs\install\Windows\glfw\lib64\Release;%(AdditionalLibraryDirectories);F:\Projects\Libs\install\Windows\glew-2.0.0\lib\Release\x64</AdditionalLibraryDirectories>
+      <SubSystem>Console</SubSystem>
     </Link>
+    <CudaCompile>
+      <Include>%(Include)</Include>
+      <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+      <CodeGeneration>compute_50,sm_50</CodeGeneration>
+      <AdditionalOptions>-x cu %(AdditionalOptions)</AdditionalOptions>
+      <FastMath>true</FastMath>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <CudaCompile Include="src\camera.h" />
+    <CudaCompile Include="src\math_helper.h" />
+    <CudaCompile Include="src\Sphere.h" />
+    <CudaCompile Include="src\ray.h" />
+    <ClInclude Include="src\material.h" />
+    <ClInclude Include="src\light.h" />
+    <ClInclude Include="src\gl_helper.h" />
+    <ClInclude Include="src\gl_renderer.h" />
+    <ClInclude Include="src\cuda_helper.h">
+      <FileType>Document</FileType>
+    </ClInclude>
+    <CudaCompile Include="src\tracer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="src\camera.cpp" />
+    <CudaCompile Include="src\math_helper.cpp" />
+    <CudaCompile Include="src\Sphere.cpp" />
+    <CudaCompile Include="src\ray.cpp" />
+    <ClCompile Include="src\material.cpp" />
+    <ClCompile Include="src\light.cpp" />
+    <ClCompile Include="src\gl_helper.cpp" />
+    <ClCompile Include="src\gl_renderer.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <CudaCompile Include="src\tracer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\texture_display.frag" />
+    <None Include="res\shaders\texture_display.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 8.0.targets" />
   </ImportGroup>
 </Project>
