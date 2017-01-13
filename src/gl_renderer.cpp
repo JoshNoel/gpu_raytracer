@@ -48,9 +48,10 @@ namespace cray
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		m_frame_counter++;
-		if (m_frame_counter % 100 == 0) {
+		double duration = std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - m_last_fps_frame_time).count();
+		if (duration > 1.0f) {
+			printf("\rFPS: %f", double(m_frame_counter) / duration);
 			m_frame_counter = 0;
-			printf("\rFPS: %f", 100.0 / std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - m_last_fps_frame_time).count());
 			m_last_fps_frame_time = std::chrono::high_resolution_clock::now();
 		}
 	}

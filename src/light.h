@@ -22,6 +22,12 @@ namespace cray
 			float3 m_pos;
 		};
 
+		struct DirLight {
+			DirLight(float3 p_dir) { m_dir = p_dir; }
+			//12 bytes
+			float3 m_dir;
+		};
+
 		Light();
 		Light(const Light& p_light);
 		~Light();
@@ -35,9 +41,11 @@ namespace cray
 
 		union {
 			PointLight m_point_light;
+			DirLight m_dir_light;
 		};
 
 		static Light make_point_light(float3 p_pos, float3 p_color, float p_intensity);
+		static Light make_directional_light(float3 p_dir, float3 p_color, float p_intensity);
 	};
 }
 #endif

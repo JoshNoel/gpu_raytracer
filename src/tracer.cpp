@@ -1,12 +1,13 @@
 #include "tracer.h"
 #include "cuda_helper.h"
+#include "ray.h"
+#include "camera.h"
+#include "sphere.h"
+#include "plane.h"
 
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
-#include "ray.h"
-#include "camera.h"
-#include "sphere.h"
 #include <cassert>
 
 namespace cray
@@ -28,6 +29,11 @@ namespace cray
 		m_spheres.push_back(p_sphere);
 	}
 
+	void Tracer::add_plane(const Plane& p_plane) {
+		m_planes.push_back(p_plane);
+	}
+
+
 	void Tracer::add_light(const Light& p_light) {
 		m_lights.push_back(p_light);
 	}
@@ -37,6 +43,8 @@ namespace cray
 		copy_camera();
 		CUDA_CHECK(cudaMalloc(&m_d_spheres, sizeof(Sphere) * m_spheres.size()));
 		CUDA_CHECK(cudaMemcpy(m_d_spheres, m_spheres.data(), sizeof(Sphere) * m_spheres.size(), cudaMemcpyHostToDevice));
+		CUDA_CHECK(cudaMalloc(&m_d_planes, sizeof(Plane) * m_planes.size()));
+		CUDA_CHECK(cudaMemcpy(m_d_planes, m_planes.data(), sizeof(Plane) * m_planes.size(), cudaMemcpyHostToDevice));
 		CUDA_CHECK(cudaMalloc(&m_d_lights, sizeof(Light) * m_lights.size()));
 		CUDA_CHECK(cudaMemcpy(m_d_lights, m_lights.data(), sizeof(Light) * m_lights.size(), cudaMemcpyHostToDevice));
 		m_device_pointers_initialized = true;
@@ -56,7 +64,8 @@ namespace cray
 	}
 
 
-	__global__ void render_kernel(cudaSurfaceObject_t p_surface, Sphere* p_spheres, Light* p_lights, unsigned int p_num_spheres, unsigned int p_num_lights, float4 p_clear_color) {
+	__global__ void render_kernel(cudaSurfaceObject_t p_surface, Sphere* p_spheres, Plane* p_planes, 
+		Light* p_lights, unsigned int p_num_spheres, unsigned int p_num_planes, int p_num_lights, float4 p_clear_color) {
 		unsigned int x = blockIdx.x * blockDim.x + threadIdx.x;
 		unsigned int y = blockIdx.y * blockDim.y + threadIdx.y;
 		bool intersects = false;
@@ -71,6 +80,17 @@ namespace cray
 #endif
 			}
 		}
+
+		for (auto i = 0; i < p_num_planes; i++) {
+			if (p_planes[i].intersects(ray))
+			{
+				intersects = true;
+				//to get rid of intellisense error
+#ifdef __CUDACC__
+				surf2Dwrite(p_planes[i].calc_lighting(ray, p_lights, p_num_lights), p_surface, x * sizeof(float4), y);
+#endif
+		}
+	}
 		
 		if(!intersects) {
 			//to get rid of intellisense error
@@ -102,7 +122,7 @@ namespace cray
 
 //to get rid of intellisense error
 #ifdef __CUDACC__
-		render_kernel<<<gridDim, blockDim>>> (surface, m_d_spheres, m_d_lights, m_spheres.size(), m_lights.size(), m_clear_color);
+		render_kernel<<<gridDim, blockDim>>> (surface, m_d_spheres, m_d_planes, m_d_lights, m_spheres.size(), m_planes.size(), m_lights.size(), m_clear_color);
 #endif
 		CUDA_CHECK(cudaDestroySurfaceObject(surface));
 		CUDA_CHECK(cudaGraphicsUnmapResources(1, &m_image));

@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "sphere.h"
 #include "Light.h"
+#include "plane.h"
 
 #include <vector>
 
@@ -19,6 +20,7 @@ namespace cray
 		~Tracer();
 
 		void add_sphere(const Sphere& p_sphere);
+		void add_plane(const Plane& p_plane);
 		void add_light(const Light& p_light);
 		void register_texture(GLuint p_texture);
 		void create_cuda_objects();
@@ -31,10 +33,12 @@ namespace cray
 
 		Camera& m_camera;
 		std::vector<Sphere> m_spheres;
+		std::vector<Plane> m_planes;
 		std::vector<Light> m_lights;
 
 
 		Sphere* m_d_spheres = nullptr;
+		Plane* m_d_planes = nullptr;
 		Light* m_d_lights = nullptr;
 
 		//to ensure device pointers are initialized before rendering

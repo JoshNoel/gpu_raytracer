@@ -77,13 +77,17 @@ namespace cray
 	__device__ float4 Sphere::calc_lighting(const Ray& p_ray, Light* p_lights, unsigned int p_num_lights) const {
 		float3 finalColor = make_float3(0,0,0);
 		float3 intersectionPoint = p_ray.calc_intersection_point_1();
+		float3 normal = norm(intersectionPoint - m_position);
 		for (auto i = 0; i < p_num_lights; i++) {
 			switch (p_lights->m_type) {
 				case Light::LIGHT_TYPE::POINT:
-					float3 normal = intersectionPoint - m_position;
 					float3 toLight = p_lights[i].m_point_light.m_pos - intersectionPoint;
-					finalColor = finalColor + m_material.m_color * dot(normal, toLight) * (p_lights[i].m_intensity / mag(toLight));
+					float m = mag(toLight);
+					//linear falloff for now
+					finalColor = finalColor + m_material.m_color * dot(normal, norm(toLight)) * (p_lights[i].m_intensity / (m * m));
 					break;
+				case Light::LIGHT_TYPE::DIRECTIONAL:
+					finalColor = finalColor + m_material.m_color * dot(normal, p_lights[i].m_dir_light.m_dir * -1.0f) * p_lights[i].m_intensity;
 			}
 		}
 		return make_float4(finalColor.x, finalColor.y, finalColor.z, 1.0f);
