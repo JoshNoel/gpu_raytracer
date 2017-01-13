@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "sphere.h"
 #include "tracer.h"
+#include "material.h"
 
 #include <iostream>
 
@@ -38,6 +39,7 @@ int main() {
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(0);
 	GLenum glewErr = glewInit();
 	if (glewErr != GLEW_OK) {
 		fprintf(stderr, "Error initializing GLEW at: %s - %u \n Error: %s \n", __FILE__, __LINE__, glewGetErrorString(glewErr));
@@ -65,15 +67,28 @@ int main() {
 #endif
 
 	cray::gl_renderer renderer("./res/shaders/texture_display.vert", "./res/shaders/texture_display.frag", WIDTH, HEIGHT);
+	
+	cray::Material material(make_float3(1.0f, 0.0f, 0.0f));
+	cray::Sphere sphere(1.0f, make_float3(0.0f, -1.0f, -5.0f), material);
+	cray::Sphere sphere2(1.0f, make_float3(1.0f, 1.0f, -7.0f), material);
+	cray::Sphere sphere3(1.0f, make_float3(-2.0f, 0.0f, -9.0f), material);
 
-	cray::Sphere sphere(1.0f, make_float3(0.0f, 0.0f, -5.0f), make_float4(1.0f,0.0f,0.0f, 1.0f));
+	cray::Light point_light;
+	point_light = cray::Light::make_point_light(make_float3(2.0f, 4.0f, 1.0f), make_float3(1.0f, 1.0f, 1.0f), 1.0f);
+
 	cray::Camera camera = cray::Camera::make_camera(make_float3(0.0f, 0.0f, 0.0f), make_float3(0.0f, 0.0f, -1.0f), make_float3(0.0f, 1.0f, 0.0f), WIDTH, HEIGHT);
-	cray::Tracer tracer(camera);
+	cray::Tracer tracer(camera, make_float4(0.0f, 0.0f, 0.0f, 1.0f));
 	tracer.add_sphere(sphere);
+	tracer.add_sphere(sphere2);
+	tracer.add_sphere(sphere3);
+
+	tracer.add_light(point_light);
 	tracer.create_cuda_objects();
 	tracer.register_texture(renderer.m_texture);
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+	cray::cray_key_camera = &camera;
+	std::chrono::high_resolution_clock::time_point last_poll_time = std::chrono::high_resolution_clock::now();
 	while(!glfwWindowShouldClose(window))
 	{
 		//trace scene -> texture
@@ -81,7 +96,12 @@ int main() {
 		tracer.render();
 		renderer.render();
 		glfwSwapBuffers(window);
-		glfwPollEvents();
+		if (std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::high_resolution_clock::now() - last_poll_time).count() > (1.0 / 30.0))
+		{
+			glfwPollEvents();
+			cray::key_handler(window);
+			last_poll_time = std::chrono::high_resolution_clock::now();
+		}
 	}
 
 	glfwTerminate();
