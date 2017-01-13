@@ -71,6 +71,7 @@ namespace cray
 #endif
 			}
 		}
+		
 		if(!intersects) {
 			//to get rid of intellisense error
 #ifdef __CUDACC__

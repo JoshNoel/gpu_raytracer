@@ -15,7 +15,7 @@ namespace cray
 		cam.m_fov = p_fov;
 		cam.m_focal_length = p_focal_length;
 		cam.m_ar = float(p_width) / float(p_height);
-		cam.m_world_width = (2.0f * tanf(p_fov) * p_focal_length);
+		cam.m_world_width = 2.0f * tanf(p_fov / 2.0f) * p_focal_length;
 		cam.m_world_height = cam.m_world_width / cam.m_ar;
 		return cam;
 	}

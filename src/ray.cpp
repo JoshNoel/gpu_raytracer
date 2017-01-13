@@ -29,8 +29,8 @@ namespace cray
 	__device__ Ray Ray::make_primary(unsigned x, unsigned y, const Camera& p_camera) {
 		float3 dir = norm(p_camera.m_dir);
 		dir = dir * p_camera.m_focal_length;
-		dir = dir + p_camera.m_right * p_camera.m_world_width * (float(x) / float(p_camera.m_width) - 0.5f);
-		dir = dir + p_camera.m_up * p_camera.m_world_height * (float(y) / float(p_camera.m_height) - 0.5f);
+		dir = dir + p_camera.m_right * p_camera.m_world_width * ((float(x) / float(p_camera.m_width)) - 0.5f);
+		dir = dir + p_camera.m_up * p_camera.m_world_height * ((float(y) / float(p_camera.m_height)) - 0.5f);
 
 		return Ray(p_camera.m_position, norm(dir));
 	}
