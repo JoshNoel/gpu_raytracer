@@ -35,6 +35,11 @@ namespace cray
 		return Ray(p_camera.m_position, norm(dir));
 	}
 
+	__device__ float3 Ray::calc_point(float t) const {
+		return m_ori + m_dir * t;
+	}
+
+
 	__device__ float3 Ray::calc_intersection_point_1() const {
 		return m_ori + m_dir * m_thit0;
 	}

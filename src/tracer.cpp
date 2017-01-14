@@ -89,9 +89,10 @@ namespace cray
 #ifdef __CUDACC__
 				surf2Dwrite(p_planes[i].calc_lighting(ray, p_lights, p_num_lights), p_surface, x * sizeof(float4), y);
 #endif
+			}
 		}
-	}
 		
+		//if no intersection, just output clear color
 		if(!intersects) {
 			//to get rid of intellisense error
 #ifdef __CUDACC__

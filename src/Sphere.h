@@ -13,8 +13,13 @@ namespace cray {
 		~Sphere();
 
 		__device__ bool intersects(Ray& ray) const;
+
+		//simply checks for intersection w/o solving for point at which it occurs
+		__device__ bool intersects_simple(const Ray& ray) const;
+
 		__device__ float4 calc_lighting(const Ray& p_ray, Light* p_lights, unsigned int p_num_lights) const;
 
+	private:
 		//32 bytes
 		float m_radius;
 		float3 m_position;

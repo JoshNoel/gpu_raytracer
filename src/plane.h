@@ -16,6 +16,8 @@ namespace cray
 		~Plane();
 
 		__device__ bool intersects(Ray& p_ray) const;
+		__device__ bool intersects_simple(const Ray& p_ray) const;
+
 		__device__ float4 calc_lighting(const Ray& p_ray, Light* p_lights, unsigned int p_num_lights) const;
 
 	private:

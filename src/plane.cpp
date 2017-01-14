@@ -12,8 +12,8 @@ namespace cray
 	}
 
 	__device__ bool Plane::intersects(Ray& p_ray) const {
-		float d = dot(p_ray.m_dir, m_normal);
-		if (d >= 0)
+		float d = dot(p_ray.get_dir(), m_normal);
+		if (dot(p_ray.get_dir(), m_normal) > 0)
 			return false;
 		//ax + by + cz = u | PLANE EQ.
 		//norm dot (o + dt) = u
@@ -22,14 +22,14 @@ namespace cray
 		//t = (u - (n dot o))/(n dot d)
 
 		float u = dot(m_position, m_normal);
-		float t = (u - dot(m_normal, p_ray.m_ori)) / dot(m_normal, p_ray.m_dir);
+		float t = (u - dot(m_normal, p_ray.get_origin())) / dot(m_normal, p_ray.get_dir());
 
-		if (t < p_ray.m_thit0) {
-			float3 hitPoint = p_ray.m_ori + p_ray.m_dir * t;
+		if (t < p_ray.get_thit0()) {
+			float3 hitPoint = p_ray.calc_point(t);
 			//check if within dimensions
 			if (abs(dot(hitPoint - m_position, m_u_axis)) < m_half_dimensions.x && abs(dot(hitPoint - m_position, m_v_axis)) < m_half_dimensions.y) {
-				p_ray.m_thit0 = t;
-				p_ray.m_thit1 = t + (m_thickness / d);
+				p_ray.set_thit0(t);
+				p_ray.set_thit1(t + (m_thickness / d));
 				return true;
 			}
 		}
@@ -37,18 +37,42 @@ namespace cray
 		return false;
 	}
 
+	__device__ bool Plane::intersects_simple(const Ray& p_ray) const {
+		if (dot(p_ray.get_dir(), m_normal) > 0)
+			return false;
+		//ax + by + cz = u | PLANE EQ.
+		//norm dot (o + dt) = u
+		//n.x*(o.x+d.x*t)... = u
+		//n.x*d.x*t... = u - (n dot o)
+		//t = (u - (n dot o))/(n dot d)
+
+		float u = dot(m_position, m_normal);
+		float t = (u - dot(m_normal, p_ray.get_origin())) / dot(m_normal, p_ray.get_dir());
+
+		if (t < p_ray.get_thit0()) {
+			float3 hitPoint = p_ray.calc_point(t);
+			//check if within dimensions
+			if (abs(dot(hitPoint - m_position, m_u_axis)) < m_half_dimensions.x && abs(dot(hitPoint - m_position, m_v_axis)) < m_half_dimensions.y) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
 	__device__ float4 Plane::calc_lighting(const Ray& p_ray, Light* p_lights, unsigned p_num_lights) const {
 		float3 finalColor = make_float3(0, 0, 0);
 		for(auto i = 0; i < p_num_lights; i++) {
-			switch (p_lights[i].m_type) {
+			switch (p_lights[i].get_type()) {
 			case Light::LIGHT_TYPE::POINT:
-				float3 toLight = p_lights->m_point_light.m_pos - p_ray.calc_intersection_point_1();
+				float3 toLight = p_lights->get_point_light().m_pos - p_ray.calc_intersection_point_1();
 				float m = mag(toLight);
 				//linear falloff for now
-				finalColor = finalColor + m_material.m_color * dot(norm(toLight), m_normal) * (p_lights[i].m_intensity / (m * m));
+				finalColor = finalColor + m_material.get_color() * dot(norm(toLight), m_normal) * (p_lights[i].get_intensity() / (m * m));
 				break;
 			case Light::LIGHT_TYPE::DIRECTIONAL:
-				finalColor = finalColor + m_material.m_color * dot(m_normal, p_lights[i].m_dir_light.m_dir * -1.0f) * p_lights[i].m_intensity;
+				finalColor = finalColor + m_material.get_color() * dot(m_normal, p_lights[i].get_dir_light().m_dir * -1.0f) * p_lights[i].get_intensity();
 			}
 		}
 

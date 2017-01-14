@@ -32,6 +32,21 @@ namespace cray
 		Light(const Light& p_light);
 		~Light();
 
+		//light characteristics can only be set once through these functions
+		static Light make_point_light(float3 p_pos, float3 p_color, float p_intensity);
+		static Light make_directional_light(float3 p_dir, float3 p_color, float p_intensity);
+
+
+		__device__ const LIGHT_TYPE& get_type() const { return m_type; }
+		__device__ float get_intensity() const { return m_intensity; }
+		__device__ const float3& get_color() const { return m_color; }
+
+		//don't check m_type to avoid overhead. 
+		//downside is caller must verify light's type before calling either function
+		__device__ const PointLight& get_point_light() const { return m_point_light; }
+		__device__ const DirLight& get_dir_light() const { return m_dir_light; }
+
+	private:
 		//20 bytes
 		LIGHT_TYPE m_type;
 		float m_intensity;
@@ -43,9 +58,6 @@ namespace cray
 			PointLight m_point_light;
 			DirLight m_dir_light;
 		};
-
-		static Light make_point_light(float3 p_pos, float3 p_color, float p_intensity);
-		static Light make_directional_light(float3 p_dir, float3 p_color, float p_intensity);
 	};
 }
 #endif
