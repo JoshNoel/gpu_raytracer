@@ -5,9 +5,11 @@ namespace cray
 {
 	Sphere::Sphere(float p_radius, float3 p_position, Material& p_material)
 		: m_radius(p_radius), m_position(p_position), m_material(p_material) {
+		m_data = new 
 	}
-
+		
 	Sphere::~Sphere() {
+		delete m_data;
 	}
 
 	__device__ bool Sphere::intersects(Ray& ray) const {
@@ -41,7 +43,7 @@ namespace cray
 			t1 = 0;
 			//to get rid of intellisense error
 #ifdef __CUDACC__
-			t2 = (-b - sqrtf(b*b - 4 * a*c)) / 2 * a;
+			t2 = (-b - sqrtf(b*b - 4 * c)) / 2;
 #endif
 		}
 		else 

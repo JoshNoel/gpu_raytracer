@@ -69,5 +69,9 @@ namespace cray
 	static inline __host__ float deg_to_rad(float a) {
 		return a * _PI_/180.0f;
 	}
+
+	static inline __host__ __device__ float3 calc_points_to(float3 from, float3 to) {
+		return to - from;
+	}
 }
 #endif

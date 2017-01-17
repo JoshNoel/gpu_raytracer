@@ -24,6 +24,9 @@ namespace cray
 
 		struct DirLight {
 			DirLight(float3 p_dir) { m_dir = p_dir; }
+			void point_to(float3 p_ori, float3 p_pos) {
+				m_dir = p_pos - p_ori;
+			}
 			//12 bytes
 			float3 m_dir;
 		};

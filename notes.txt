@@ -1,0 +1,16 @@
+Optimization ideas:
+	3D thread block with dynamic optimization based on background threads
+	Output depth map from camera to only test some objects for initial intersection
+	
+Problems:
+	Seperate compilation = no inlining = major performance hit using nvcc
+	
+Decisions:
+	Virtual functions effect on performance?
+	Only implement triangle intersection
+		No virtual function call overhead (no need for Shape base class)
+		Greatly reduces warp divergence in scenes that contain multiple shape types
+		Opens up further optimization opportunities
+	
+General Notes:
+	float4 > float3 due to cuda instruction: LD.128, there is no LD.96

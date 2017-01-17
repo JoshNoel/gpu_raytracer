@@ -8,6 +8,9 @@
 namespace cray {
 	class Sphere
 	{
+	private:
+		struct SphereData;
+
 	public:
 		Sphere(float p_radius, float3 p_position, Material& p_material);
 		~Sphere();
@@ -20,9 +23,10 @@ namespace cray {
 		__device__ float4 calc_lighting(const Ray& p_ray, Light* p_lights, unsigned int p_num_lights) const;
 
 	private:
+
 		//32 bytes
 		float m_radius;
-		float3 m_position;
+		float3 m_position;;
 		Material m_material;
 	};
 }

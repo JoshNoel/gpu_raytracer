@@ -98,7 +98,7 @@ int main() {
 	std::chrono::high_resolution_clock::time_point last_poll_time = std::chrono::high_resolution_clock::now();
 	while(!glfwWindowShouldClose(window))
 	{
-		//trace scene -> texture
+		//trace Scene -> texture
 		//render full screen rectangle with texture
 		tracer.render();
 		renderer.render();

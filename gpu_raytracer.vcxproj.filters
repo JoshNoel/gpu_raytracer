@@ -30,7 +30,10 @@
     <ClInclude Include="src\material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\plane.h">
+    <ClInclude Include="src\shape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,7 +53,10 @@
     <ClCompile Include="src\material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\plane.cpp">
+    <ClCompile Include="src\shape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,5 +95,14 @@
     <CudaCompile Include="src\math_helper.cpp">
       <Filter>Source Files</Filter>
     </CudaCompile>
+    <CudaCompile Include="src\plane.h">
+      <Filter>Header Files</Filter>
+    </CudaCompile>
+    <CudaCompile Include="src\plane.cpp">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="res\scenes\test_scene.xml" />
   </ItemGroup>
 </Project>

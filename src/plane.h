@@ -21,6 +21,7 @@ namespace cray
 		__device__ float4 calc_lighting(const Ray& p_ray, Light* p_lights, unsigned int p_num_lights) const;
 
 	private:
+
 		//v-axis = normal X u-axis
 		float3 m_normal;
 		float3 m_u_axis, m_v_axis;
@@ -31,8 +32,6 @@ namespace cray
 
 		//to be used for refraction
 		float m_thickness;
-
-		Material m_material;
 	};
 }
 #endif

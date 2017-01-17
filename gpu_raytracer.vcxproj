@@ -94,12 +94,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>F:\Projects\Libs\install\Windows\glew-2.0.0\include;F:\Projects\Libs\install\Windows\glfw\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\Projects\Libs\install\Windows\pugixml\include;F:\Projects\Libs\install\Windows\glew-2.0.0\include;F:\Projects\Libs\install\Windows\glfw\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BREAK_ON_CUDA_ERROR;BREAK_ON_GL_ERROR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;cudart.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>F:\Projects\Libs\install\Windows\glfw\lib64\Debug;%(AdditionalLibraryDirectories);F:\Projects\Libs\install\Windows\glew-2.0.0\lib\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>pugixml.lib;opengl32.lib;glfw3.lib;glew32.lib;cudart.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\Projects\Libs\install\Windows\glfw\lib64\Debug;%(AdditionalLibraryDirectories);F:\Projects\Libs\install\Windows\glew-2.0.0\lib\Release\x64;F:\Projects\Libs\install\Windows\pugixml\lib</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
     <CudaCompile>
@@ -131,14 +131,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>F:\Projects\Libs\install\Windows\glew-2.0.0\include;F:\Projects\Libs\install\Windows\glfw\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\Projects\Libs\install\Windows\pugixml\include;F:\Projects\Libs\install\Windows\glew-2.0.0\include;F:\Projects\Libs\install\Windows\glfw\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BREAK_ON_CUDA_ERROR;BREAK_ON_GL_ERROR;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;glew32.lib;cudart.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>F:\Projects\Libs\install\Windows\glfw\lib64\Release;%(AdditionalLibraryDirectories);F:\Projects\Libs\install\Windows\glew-2.0.0\lib\Release\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>pugixml.lib;opengl32.lib;glfw3.lib;glew32.lib;cudart.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\Projects\Libs\install\Windows\glfw\lib64\Release;%(AdditionalLibraryDirectories);F:\Projects\Libs\install\Windows\glew-2.0.0\lib\Release\x64;F:\Projects\Libs\install\Windows\pugixml\lib</AdditionalLibraryDirectories>
       <SubSystem>Console</SubSystem>
     </Link>
     <CudaCompile>
@@ -156,6 +156,8 @@
     <CudaCompile Include="src\Sphere.h" />
     <CudaCompile Include="src\ray.h" />
     <CudaCompile Include="src\plane.h" />
+    <ClInclude Include="src\scene.h" />
+    <ClInclude Include="src\shape.h" />
     <ClInclude Include="src\material.h" />
     <ClInclude Include="src\light.h" />
     <ClInclude Include="src\gl_helper.h" />
@@ -171,6 +173,8 @@
     <CudaCompile Include="src\Sphere.cpp" />
     <CudaCompile Include="src\ray.cpp" />
     <CudaCompile Include="src\plane.cpp" />
+    <ClCompile Include="src\scene.cpp" />
+    <ClCompile Include="src\shape.cpp" />
     <ClCompile Include="src\material.cpp" />
     <ClCompile Include="src\light.cpp" />
     <ClCompile Include="src\gl_helper.cpp" />
@@ -181,6 +185,11 @@
   <ItemGroup>
     <None Include="res\shaders\texture_display.frag" />
     <None Include="res\shaders\texture_display.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="res\scenes\test_scene.xml">
+      <SubType>Designer</SubType>
+    </Xml>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

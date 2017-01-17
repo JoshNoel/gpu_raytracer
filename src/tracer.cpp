@@ -1,9 +1,7 @@
 #include "tracer.h"
 #include "cuda_helper.h"
 #include "ray.h"
-#include "camera.h"
-#include "sphere.h"
-#include "plane.h"
+#include "scene.h"
 
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
@@ -13,7 +11,6 @@
 namespace cray
 {
 
-	__device__ __constant__ Camera d_tracer_camera;
 
 	Tracer::Tracer(Camera& p_camera, const float4& p_clear_color)
 		: m_camera(p_camera), m_clear_color(p_clear_color)
@@ -22,40 +19,12 @@ namespace cray
 
 	Tracer::~Tracer()
 	{
-		cudaFree(m_d_spheres);
-	}
-
-	void Tracer::add_sphere(const Sphere& p_sphere) {
-		m_spheres.push_back(p_sphere);
-	}
-
-	void Tracer::add_plane(const Plane& p_plane) {
-		m_planes.push_back(p_plane);
 	}
 
 
-	void Tracer::add_light(const Light& p_light) {
-		m_lights.push_back(p_light);
-	}
 
 
-	void Tracer::create_cuda_objects() {
-		copy_camera();
-		CUDA_CHECK(cudaMalloc(&m_d_spheres, sizeof(Sphere) * m_spheres.size()));
-		CUDA_CHECK(cudaMemcpy(m_d_spheres, m_spheres.data(), sizeof(Sphere) * m_spheres.size(), cudaMemcpyHostToDevice));
-		CUDA_CHECK(cudaMalloc(&m_d_planes, sizeof(Plane) * m_planes.size()));
-		CUDA_CHECK(cudaMemcpy(m_d_planes, m_planes.data(), sizeof(Plane) * m_planes.size(), cudaMemcpyHostToDevice));
-		CUDA_CHECK(cudaMalloc(&m_d_lights, sizeof(Light) * m_lights.size()));
-		CUDA_CHECK(cudaMemcpy(m_d_lights, m_lights.data(), sizeof(Light) * m_lights.size(), cudaMemcpyHostToDevice));
-		m_device_pointers_initialized = true;
-	}
 
-	void Tracer::copy_camera() {
-		//to get rid of intellisense error
-#ifdef __CUDACC__
-		CUDA_CHECK(cudaMemcpyToSymbol(d_tracer_camera, &m_camera, sizeof(Camera)));
-#endif
-	}
 
 
 
@@ -64,6 +33,9 @@ namespace cray
 	}
 
 
+	__global__ void render_kernel(const Scene::DeviceScene* p_scene) {
+
+	}
 	__global__ void render_kernel(cudaSurfaceObject_t p_surface, Sphere* p_spheres, Plane* p_planes, 
 		Light* p_lights, unsigned int p_num_spheres, unsigned int p_num_planes, int p_num_lights, float4 p_clear_color) {
 		unsigned int x = blockIdx.x * blockDim.x + threadIdx.x;
