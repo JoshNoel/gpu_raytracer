@@ -21,16 +21,34 @@
     <ClInclude Include="src\gl_renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\gl_helper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\plane.h">
+    <ClInclude Include="src\object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\gpu_raytracer_temp\gpu_raytracer\src\scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math_helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tracer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gl_helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,16 +59,13 @@
     <ClCompile Include="src\gl_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\gl_helper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\plane.cpp">
+    <ClCompile Include="src\object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,31 +77,19 @@
     <CudaCompile Include="src\ray.cpp">
       <Filter>Source Files</Filter>
     </CudaCompile>
-    <CudaCompile Include="src\ray.h">
-      <Filter>Header Files</Filter>
-    </CudaCompile>
-    <CudaCompile Include="src\Sphere.cpp">
-      <Filter>Source Files</Filter>
-    </CudaCompile>
-    <CudaCompile Include="src\Sphere.h">
-      <Filter>Header Files</Filter>
-    </CudaCompile>
     <CudaCompile Include="src\tracer.cpp">
       <Filter>Source Files</Filter>
-    </CudaCompile>
-    <CudaCompile Include="src\tracer.h">
-      <Filter>Header Files</Filter>
     </CudaCompile>
     <CudaCompile Include="src\camera.cpp">
       <Filter>Source Files</Filter>
     </CudaCompile>
-    <CudaCompile Include="src\camera.h">
-      <Filter>Header Files</Filter>
-    </CudaCompile>
-    <CudaCompile Include="src\math_helper.h">
-      <Filter>Header Files</Filter>
-    </CudaCompile>
     <CudaCompile Include="src\math_helper.cpp">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
+    <CudaCompile Include="src\scene.cpp">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
+    <CudaCompile Include="src\gl_helper.cpp">
       <Filter>Source Files</Filter>
     </CudaCompile>
   </ItemGroup>

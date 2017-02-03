@@ -1,14 +1,14 @@
-﻿#include "gl_helper.h"
+#include "gl_helper.h"
 #include <iostream>
 #include <stdlib.h>
+#include "camera.h"
 
 namespace cray
 {
 	Camera* cray_key_camera;
-	void CALLBACK opengl_error_callback(GLenum source​, GLenum type, GLuint id​, GLenum severity, GLsizei length​, const GLchar * p_message, const void * userParam​)
-	{
+	void CALLBACK opengl_error_callback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* const p_message, const void* const userParam) {
 		std::cout << "------------------------OPENGL ERROR--------------------------" << std::endl;
-		std::cout << "Message: " << p_message << std::endl;
+		std::cout << "Message: " << *p_message << std::endl;
 		std::cout << "Type: ";
 		switch (type)
 		{
@@ -65,29 +65,29 @@ namespace cray
 		int action = glfwGetKey(p_window, GLFW_KEY_W);
 		if(action == GLFW_PRESS || action == GLFW_REPEAT)
 		{
-			cray_key_camera->m_position = cray_key_camera->m_position + cray_key_camera->m_dir * Camera::MOVE_PARAMETERS::FORWARD_SPEED;
-			cray_key_camera->m_needs_update = true;
+			cray_key_camera->set_position(cray_key_camera->get_position() + cray_key_camera->get_dir() * Camera::MOVE_PARAMETERS::FORWARD_SPEED);
+			cray_key_camera->set_needs_update(true);
 		}
 
 		action = glfwGetKey(p_window, GLFW_KEY_S);
 		if (action == GLFW_PRESS || action == GLFW_REPEAT)
 		{
-			cray_key_camera->m_position = cray_key_camera->m_position - cray_key_camera->m_dir * Camera::MOVE_PARAMETERS::BACK_SPEED;
-			cray_key_camera->m_needs_update = true;
+			cray_key_camera->set_position(cray_key_camera->get_position() - cray_key_camera->get_dir() * Camera::MOVE_PARAMETERS::BACK_SPEED);
+			cray_key_camera->set_needs_update(true);
 		}
 
 		action = glfwGetKey(p_window, GLFW_KEY_D);
 		if (action == GLFW_PRESS || action == GLFW_REPEAT)
 		{
-			cray_key_camera->m_position = cray_key_camera->m_position + cray_key_camera->m_right * Camera::MOVE_PARAMETERS::SIDE_SPEED;
-			cray_key_camera->m_needs_update = true;
+			cray_key_camera->set_position(cray_key_camera->get_position() + cray_key_camera->get_right() * Camera::MOVE_PARAMETERS::SIDE_SPEED);
+			cray_key_camera->set_needs_update(true);
 		}
 
 		action = glfwGetKey(p_window, GLFW_KEY_A);
 		if (action == GLFW_PRESS || action == GLFW_REPEAT)
 		{
-			cray_key_camera->m_position = cray_key_camera->m_position - cray_key_camera->m_right * Camera::MOVE_PARAMETERS::SIDE_SPEED;
-			cray_key_camera->m_needs_update = true;
+			cray_key_camera->set_position(cray_key_camera->get_position() - cray_key_camera->get_dir() * Camera::MOVE_PARAMETERS::SIDE_SPEED);
+			cray_key_camera->set_needs_update(true);
 		}
 	}
 }
