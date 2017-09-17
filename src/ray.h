@@ -28,13 +28,13 @@ namespace cray
 		}		
 		__device__ ~Ray() {};
 
-		static __device__ Ray make_primary(unsigned int x, unsigned int y, const Camera& p_camera) {
-			float3 dir = norm(p_camera.get_dir());
-			dir = dir * p_camera.get_focal_length();
-			dir = dir + p_camera.get_right() * p_camera.get_world_width() * ((float(x) / float(p_camera.get_width())) - 0.5f);
-			dir = dir + p_camera.get_up() * p_camera.get_world_height() * ((float(y) / float(p_camera.get_height())) - 0.5f);
+		static __device__ Ray make_primary(unsigned int x, unsigned int y, const Camera* p_camera) {
+			float3 dir = norm(p_camera->get_dir());
+			dir = dir * p_camera->get_focal_length();
+			dir = dir + p_camera->get_right() * p_camera->get_world_width() * ((float(x) / float(p_camera->get_width())) - 0.5f);
+			dir = dir + p_camera->get_up() * p_camera->get_world_height() * ((float(y) / float(p_camera->get_height())) - 0.5f);
 
-			return Ray(p_camera.get_position(), norm(dir));
+			return Ray(p_camera->get_position(), norm(dir));
 		}
 
 		__device__ float3 Ray::calc_point(float t) const { return m_ori + m_dir * t; }

@@ -11,8 +11,6 @@
 
 namespace cray
 {
-	__device__ __constant__ Camera d_tracer_camera;
-
 	Scene::Scene()
 		: m_d_scene(nullptr)
 	{
@@ -21,6 +19,7 @@ namespace cray
 
 	Scene::Scene(std::string path) 
 		: Scene() {
+        CUDA_CHECK(cudaMallocHost((void**)&m_d_camera, sizeof(Camera)));
 		loadFromFile(path);
 	}
 
@@ -136,6 +135,9 @@ namespace cray
 
 		//create DeviceScene on host for copy to device
 		DeviceScene deviceScene;
+        
+        //set device camera pointer equal to allocated device camera pointer
+        deviceScene.m_p_camera = m_d_camera;
 
 		//copy light array to device
 		deviceScene.m_num_lights = lightVector.size();
@@ -169,7 +171,7 @@ namespace cray
 	void Scene::copy_camera() {
 		//to get rid of intellisense error
 #ifdef __CUDACC__
-		CUDA_CHECK(cudaMemcpyToSymbol(d_tracer_camera, &m_camera, sizeof(Camera)));
+		CUDA_CHECK(cudaMemcpy(m_d_camera, &m_camera, sizeof(Camera), cudaMemcpyHostToDevice));
 #endif
 	}
 }

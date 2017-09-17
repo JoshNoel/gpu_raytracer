@@ -11,12 +11,11 @@
 
 namespace cray
 {
-	extern 	__device__ __constant__ Camera d_tracer_camera;
-
 	class Scene
 	{
 	public:
 		struct DeviceScene {
+            Camera* m_p_camera;
 			Object* m_objects;
 			Light* m_lights;
 			unsigned int m_num_objects;
@@ -40,6 +39,7 @@ namespace cray
 		}
 
 		Camera m_camera;
+        Camera* m_d_camera;
 
 	private:
 		DeviceScene* m_d_scene;

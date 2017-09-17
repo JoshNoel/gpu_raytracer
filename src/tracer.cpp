@@ -11,8 +11,6 @@
 
 namespace cray
 {
-
-
 	Tracer::Tracer(Scene& p_scene)
 		: m_scene(p_scene)
 	{
@@ -32,7 +30,7 @@ namespace cray
 		unsigned int x = blockIdx.x * blockDim.x + threadIdx.x;
 		unsigned int y = blockIdx.y * blockDim.y + threadIdx.y;
 		bool intersects = false;
-        Ray ray = Ray::make_primary(x, y, d_tracer_camera);
+        Ray ray = Ray::make_primary(x, y, p_scene->m_p_camera);
         for (auto i = 0; i < p_scene->m_num_objects; i++) {
             if (p_scene->m_objects[i].intersects(ray))
             {
@@ -44,7 +42,7 @@ namespace cray
         if (!intersects) {
             //to get rid of intellisense error
 #ifdef __CUDACC__
-            surf2Dwrite(cray::d_tracer_camera.get_clear_color(), p_surface, x * sizeof(float4), y);
+            surf2Dwrite(p_scene->m_p_camera->get_clear_color(), p_surface, x * sizeof(float4), y);
 #endif
         }
         else {
