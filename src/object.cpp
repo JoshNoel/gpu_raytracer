@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace cray {
-	bool Object::loadObj(const std::string& path, Material& p_material) {
+	bool Object::loadObj(const std::string& path, Material& p_material, float3 p_position) {
 		material = p_material;
 
 		std::vector<float3> vertices;
@@ -28,13 +28,14 @@ namespace cray {
 		std::string line = "";
 		//import vertices
 		while (std::getline(ifs, line)) {
-			if (line[0] == 'v' && line[1] != 'n') {
-				size_t sz = 1;
+			if (line[0] == 'v' && line[1] != 'n' && line[1] != 't') {
+				size_t space_pos = 0;
 				float positions[3];
 				for (auto i = 0; i < 3; i++) {
-					positions[i] = std::stof(line.substr(sz), &sz);
+					space_pos = line.find(' ', space_pos + 1);
+					positions[i] = std::stof(line.substr(space_pos + 1));
 				}
-				vertices.push_back(make_float3(positions[0], positions[1], positions[3]));
+				vertices.push_back(p_position + make_float3(positions[0], positions[1], positions[2]));
 			}
 
 			else if (line[0] == 'f') {
@@ -43,10 +44,10 @@ namespace cray {
 				num_tris++;
 				size_t space_pos = 0;
 				for (auto i = 0; i < 3; i++) {
-					//finds space after current space_pos and vertex_index is next integer in the line
-					vertex_indices.push_back(std::stoul(line.substr(line.find(' ', space_pos) + 1), &space_pos));
-
-					//texture coordinate is the number after the '/' after the vertex index
+					//finds space after current space_pos(line.find) and vertex_index[i] is next integer in the line
+					//decrement vertex number to convert to 0 based indexing
+					space_pos = line.find(' ',  space_pos + 1);
+					vertex_indices.push_back(std::stoul(line.substr(space_pos + 1, 1)) - 1);
 				}
 			}
 		}

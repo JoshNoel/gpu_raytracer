@@ -5,6 +5,7 @@
 #include "gl_helper.h"
 #include "tracer.h"
 #include "scene.h"
+#include "resource_map.h"
 
 #include <iostream>
 
@@ -64,13 +65,25 @@ int main() {
 	}
 #endif
 
-	cray::gl_renderer renderer("./res/shaders/texture_display.vert", "./res/shaders/texture_display.frag", WIDTH, HEIGHT);
-	cray::Scene scene("./res/scenes/test_scene.xml");
+	cray::gl_renderer renderer(cray::get_shader_path("texture_display.vert"), cray::get_shader_path("texture_display.frag"), WIDTH, HEIGHT);
+	cray::Scene scene(cray::get_scene_path("test_scene.xml"));
 
 	cray::Tracer tracer(scene);
 	tracer.register_texture(renderer.m_texture);
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    // Use to initialize cursor pos
+    glfwPollEvents();
+
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+    cray::m_prev_mouse_x = xpos;
+    cray::m_prev_mouse_y = ypos;
+
+
+
 	std::chrono::high_resolution_clock::time_point last_poll_time = std::chrono::high_resolution_clock::now();
 	while(!glfwWindowShouldClose(window))
 	{
@@ -83,6 +96,8 @@ int main() {
 		{
 			glfwPollEvents();
 			cray::key_handler(window);
+            cray::mouse_handler(window);
+
 			last_poll_time = std::chrono::high_resolution_clock::now();
 		}
 	}

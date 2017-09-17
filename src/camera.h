@@ -28,10 +28,13 @@ namespace cray
 		void set_position(const float3& p_pos) { m_position = p_pos; }
 
 		__device__ __host__ const float3& get_dir() const { return m_dir; }
+        void set_dir(const float3& p_dir) { m_dir = p_dir; }
 
 		__device__ __host__ const float3& get_up() const { return m_up; }
+        void set_up(const float3& p_up) { m_up = p_up; }
 		 
 		__device__ __host__ const float3& get_right() const { return m_right; }
+        void set_right(const float3& p_right) { m_right = p_right; }
 
 		__device__	float get_focal_length() const { return m_focal_length; }
 

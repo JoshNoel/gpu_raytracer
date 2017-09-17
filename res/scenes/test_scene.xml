@@ -2,10 +2,10 @@
 <scene>
   
   <Camera width="800" height="800" fov="60" focal_length="1.0">
-    <pos x="0.0" y="1.5" z="0.0"/>
+    <pos x="0.0" y="0.0" z="0.0"/>
     <point_to x="0.0" y="0.0" z="-1.0"/>
     <up x="0.0" y="1.0" z="0.0"/>
-    <clear_color r="0.0" g="0.0" b="0.0"/>
+    <clear_color r="0.19" g="0.19" b="0.19"/>
   </Camera>
   
   <!--Don't use 0 for material id, reserved for invalid material id-->
@@ -15,7 +15,7 @@
     </Material>
     
     <Material id="2">
-      <color r="1.0" g="0.0" b="1.0"/>
+      <color r="0.0" g="0.0" b="1.0"/>
     </Material>
   </Materials>
   
@@ -23,13 +23,13 @@
   <!--For now all objects must be triangulated prior to use-->
   <Objects>
     <TriObject mat_id="2" path="Cube.obj">
-      <pos x="0.0" y="-0.5" z="-3.0"/>
+      <position x="0.0" y="0.0" z="-10.0"/>
     </TriObject>
   </Objects>
   
   <Lights>
     <Light type="point" intensity="7.0">
-      <pos x="2.0" y="4.0" z="-3.0"/>
+      <position x="2.0" y="4.0" z="-3.0"/>
       <color r="1.0" g="1.0" b="1.0"/>
     </Light>
 

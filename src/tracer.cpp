@@ -32,26 +32,27 @@ namespace cray
 		unsigned int x = blockIdx.x * blockDim.x + threadIdx.x;
 		unsigned int y = blockIdx.y * blockDim.y + threadIdx.y;
 		bool intersects = false;
-		Ray ray = Ray::make_primary(x, y, d_tracer_camera);
-		for(auto i = 0 ; i < p_scene->m_num_objects; i++) {
-			if(p_scene->m_objects[i].intersects(ray))
-			{
-				intersects = true;
-			}
-		}
+        Ray ray = Ray::make_primary(x, y, d_tracer_camera);
+        for (auto i = 0; i < p_scene->m_num_objects; i++) {
+            if (p_scene->m_objects[i].intersects(ray))
+            {
+                intersects = true;
+            }
+        }
 
-		//if no intersection, just output clear color
-		if(!intersects) {
-			//to get rid of intellisense error
+        //if no intersection, just output clear color
+        if (!intersects) {
+            //to get rid of intellisense error
 #ifdef __CUDACC__
-			surf2Dwrite(cray::d_tracer_camera.get_clear_color(), p_surface, x * sizeof(float4), y);
+            surf2Dwrite(cray::d_tracer_camera.get_clear_color(), p_surface, x * sizeof(float4), y);
 #endif
-		} else {
-			//to get rid of intellisense error
+        }
+        else {
+            //to get rid of intellisense error
 #ifdef __CUDACC__
-			surf2Dwrite(ray.get_hit_object()->calc_lighting(ray, p_scene->m_lights, p_scene->m_num_lights), p_surface, x * sizeof(float4), y);
+            surf2Dwrite(ray.get_hit_object()->calc_lighting(ray, p_scene->m_lights, p_scene->m_num_lights), p_surface, x * sizeof(float4), y);
 #endif
-		}
+        }
 	}
 
 	void Tracer::render() {

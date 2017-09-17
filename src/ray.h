@@ -31,8 +31,8 @@ namespace cray
 		static __device__ Ray make_primary(unsigned int x, unsigned int y, const Camera& p_camera) {
 			float3 dir = norm(p_camera.get_dir());
 			dir = dir * p_camera.get_focal_length();
-			dir = dir + p_camera.get_right() * p_camera.get_world_width() * ((float(x) / float(p_camera.get_world_width())) - 0.5f);
-			dir = dir + p_camera.get_up() * p_camera.get_world_height() * ((float(y) / float(p_camera.get_world_height())) - 0.5f);
+			dir = dir + p_camera.get_right() * p_camera.get_world_width() * ((float(x) / float(p_camera.get_width())) - 0.5f);
+			dir = dir + p_camera.get_up() * p_camera.get_world_height() * ((float(y) / float(p_camera.get_height())) - 0.5f);
 
 			return Ray(p_camera.get_position(), norm(dir));
 		}
@@ -48,11 +48,18 @@ namespace cray
 
 		__device__ float get_thit0() const { return m_thit0; }
 		__device__ float get_thit1() const { return m_thit1; }
-		__device__ void set_thit0(float f) { m_thit0 = f; }
-		__device__ void set_thit1(float f) { m_thit1 = f; }
+		__device__ bool set_thit(float t) {
+			if (t < m_thit0) {
+				m_thit0 = t;
+				return true;
+			}
+			if (t < m_thit1)
+				m_thit1 = t;
+			return false;
+		}
 
 		__device__ Object* get_hit_object() const { return m_hit_object; }
-		__device__ void set_hit_object(Object* p_obj) { m_hit_object = p_obj; }
+		__device__ void set_hit_object(Object* p_object) { m_hit_object = p_object; }
 
 	private:
 		//32 bytes

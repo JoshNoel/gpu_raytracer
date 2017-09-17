@@ -158,6 +158,7 @@
     <ClInclude Include="..\gpu_raytracer_temp\gpu_raytracer\src\scene.h" />
     <ClInclude Include="src\gl_helper.h" />
     <ClInclude Include="src\object.h" />
+    <ClInclude Include="src\resource_map.h" />
     <ClInclude Include="src\scene.h" />
     <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\math_helper.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="src\cuda_helper.h">
       <FileType>Document</FileType>
     </ClInclude>
+    <ClInclude Include="src\settings.h" />
     <ClInclude Include="src\tracer.h" />
   </ItemGroup>
   <ItemGroup>

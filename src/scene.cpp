@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "cuda_helper.h"
 #include "gl_helper.h"
+#include "resource_map.h"
 
 #include "pugixml.hpp"
 #include "cuda_runtime.h"
@@ -39,6 +40,12 @@ namespace cray
 			node.attribute("z").as_float());
 	}
 
+	float3 xml_get_col3(pugi::xml_node node) {
+		return make_float3(node.attribute("r").as_float(),
+			node.attribute("g").as_float(),
+			node.attribute("b").as_float());
+	}
+
 	bool Scene::loadFromFile(std::string path) {
 		bool result = true;
 		std::ifstream fstream;
@@ -60,14 +67,16 @@ namespace cray
 			return false;
 		}
 
+		pugi::xml_node scene = file.child("scene");
+
 		//load camera
-		pugi::xml_node camera_node = file.child("Camera");
+		pugi::xml_node camera_node = scene.child("Camera");
 		unsigned int width = camera_node.attribute("width").as_uint();
 		unsigned int height = camera_node.attribute("height").as_uint();
 		unsigned int fov = camera_node.attribute("fov").as_uint();
 		float focal_length = camera_node.attribute("focal_length").as_float();
 
-		float3 clear_color = xml_get_float3(camera_node.child("clear_color"));
+		float3 clear_color = xml_get_col3(camera_node.child("clear_color"));
 		float3 pos = xml_get_float3(camera_node.child("pos"));
 		float3 point_to = xml_get_float3(camera_node.child("point_to"));
 		float3 up = xml_get_float3(camera_node.child("up"));
@@ -78,14 +87,14 @@ namespace cray
 		//for each light
 			//lights.push_back(make_*_light(...))
 		//cudaCopy(lights.data)
-		pugi::xml_node lights = file.child("Lights");
+		pugi::xml_node lights = scene.child("Lights");
 		for(auto light : lights.children("Light")) {
 			float intensity = light.attribute("intensity").as_float();
-			float3 color = xml_get_float3(light.child("color"));
+			float3 color = xml_get_col3(light.child("color"));
 
 			std::string type = light.attribute("type").as_string();
 			if(type == "point") {
-				float3 pos = xml_get_float3(light.child("pos"));
+				float3 pos = xml_get_float3(light.child("position"));
 				lightVector.push_back(Light::make_point_light(pos, color, intensity));
 			} else if (type == "dir") {
 				float3 dir = xml_get_float3(light.child("dir"));
@@ -98,27 +107,30 @@ namespace cray
 
 		//for each material
 			//materials.map(Material(r,g,b), id)
-		pugi::xml_node material_node = file.child("Materials");
+		pugi::xml_node material_node = scene.child("Materials");
 		for (auto material : material_node.children("Material")) {
 			unsigned int id = material.attribute("id").as_uint();
-			float3 color = xml_get_float3(material.child("color"));
+			float3 color = xml_get_col3(material.child("color"));
 			materialMap.try_emplace(id, Material(color));
 		}
 		
 		//for each object
 			//objectVector.push_back( loadOBJ())
 		//cudaCopy(objectVector.data())
-		pugi::xml_node object_node = file.child("Objects");
+		pugi::xml_node object_node = scene.child("Objects");
 		for(auto obj : object_node.children()) {
 			unsigned int material_id = obj.attribute("mat_id").as_uint();
 			if(material_id == 0) {
 				fprintf(stderr, "Error loading object from xml scene: invalid mat_id");
 				result = false;
 			}
-			std::string obj_path = obj.attribute("path").as_string();
+			std::string obj_path = cray::get_object_path(obj.attribute("path").as_string());
+			
+			float3 position = xml_get_float3(obj.child("position"));
+
 			if (obj_path != "") {
 				objectVector.push_back(Object());
-				objectVector.back().loadObj(obj_path, materialMap.at(material_id));
+				objectVector.back().loadObj(obj_path, materialMap.at(material_id), position);
 			}
 		}
 
@@ -134,7 +146,7 @@ namespace cray
 
 		//copy object array to device
 		deviceScene.m_num_objects = objectVector.size();
-		for(auto obj : objectVector) {
+		for(Object& obj : objectVector) {
 			Triangle* deviceTris;
 			CUDA_CHECK(cudaMalloc(&deviceTris, obj.num_tris * sizeof(Triangle)));
 			CUDA_CHECK(cudaMemcpy(deviceTris, obj.tris, obj.num_tris * sizeof(Triangle), cudaMemcpyHostToDevice));
