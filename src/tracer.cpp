@@ -69,7 +69,7 @@ namespace cray
 		//call kernel - pass surface, width, height
 		//make size dynamic later
 		dim3 blockDim(32, 16);
-		dim3 gridDim(m_scene.m_camera.get_width() / 32, m_scene.m_camera.get_height() / 16);
+		dim3 gridDim(m_scene.m_camera->get_width() / 32, m_scene.m_camera->get_height() / 16);
 
 //to get rid of intellisense error
 #ifdef __CUDACC__

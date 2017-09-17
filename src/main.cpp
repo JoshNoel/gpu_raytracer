@@ -82,7 +82,8 @@ int main() {
     cray::m_prev_mouse_x = xpos;
     cray::m_prev_mouse_y = ypos;
 
-
+    //enable mapped pinned memory
+    cudaSetDeviceFlags(cudaDeviceMapHost);
 
 	std::chrono::high_resolution_clock::time_point last_poll_time = std::chrono::high_resolution_clock::now();
 	while(!glfwWindowShouldClose(window))
@@ -96,7 +97,7 @@ int main() {
 		{
 			glfwPollEvents();
 			cray::key_handler(window);
-            cray::mouse_handler(window);
+            //cray::mouse_handler(window);
 
 			last_poll_time = std::chrono::high_resolution_clock::now();
 		}

@@ -32,14 +32,13 @@ namespace cray
 		DeviceScene* get_device_scene() { return m_d_scene; }
 		void copy_camera();
 		void update_camera() {
-			if(m_camera.get_needs_update()) {
+			if(m_camera->get_needs_update()) {
 				copy_camera();
-				m_camera.set_needs_update(false);
+				m_camera->set_needs_update(false);
 			}
 		}
 
-		Camera m_camera;
-        Camera* m_d_camera;
+		Camera* m_camera;
 
 	private:
 		DeviceScene* m_d_scene;

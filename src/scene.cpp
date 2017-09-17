@@ -14,18 +14,20 @@ namespace cray
 	Scene::Scene()
 		: m_d_scene(nullptr)
 	{
-		cray::cray_key_camera = &m_camera;
+        CUDA_CHECK(cudaHostAlloc((void**)&m_camera, sizeof(Camera), cudaHostAllocMapped));
+		cray::cray_key_camera = m_camera;
 	}
 
 	Scene::Scene(std::string path) 
 		: Scene() {
-        CUDA_CHECK(cudaMallocHost((void**)&m_d_camera, sizeof(Camera)));
+        CUDA_CHECK(cudaHostAlloc((void**)&m_camera, sizeof(Camera), cudaHostAllocMapped));
 		loadFromFile(path);
 	}
 
 
 	Scene::~Scene()
 	{
+        CUDA_CHECK(cudaFreeHost(m_camera));
 	}
 
 	//kernel to 
@@ -80,7 +82,7 @@ namespace cray
 		float3 point_to = xml_get_float3(camera_node.child("point_to"));
 		float3 up = xml_get_float3(camera_node.child("up"));
 
-		m_camera = Camera::make_camera(pos, point_to - pos, up, width, height, clear_color, deg_to_rad(fov), focal_length);
+		*m_camera = Camera::make_camera(pos, point_to - pos, up, width, height, clear_color, deg_to_rad(fov), focal_length);
 		copy_camera();
  
 		//for each light
@@ -137,7 +139,7 @@ namespace cray
 		DeviceScene deviceScene;
         
         //set device camera pointer equal to allocated device camera pointer
-        deviceScene.m_p_camera = m_d_camera;
+        CUDA_CHECK(cudaHostGetDevicePointer((void**)&deviceScene.m_p_camera, m_camera, 0));
 
 		//copy light array to device
 		deviceScene.m_num_lights = lightVector.size();
@@ -171,7 +173,7 @@ namespace cray
 	void Scene::copy_camera() {
 		//to get rid of intellisense error
 #ifdef __CUDACC__
-		CUDA_CHECK(cudaMemcpy(m_d_camera, &m_camera, sizeof(Camera), cudaMemcpyHostToDevice));
+		//CUDA_CHECK(cudaMemcpy(m_d_camera, &m_camera, sizeof(Camera), cudaMemcpyHostToDevice));
 #endif
 	}
 }
