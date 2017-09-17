@@ -8,6 +8,8 @@
 
 namespace cray
 {
+	extern 	__device__ __constant__ Camera d_tracer_camera;
+
 	class Tracer
 	{
 	public:
